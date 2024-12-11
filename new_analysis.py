@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import os
 from scipy.spatial.distance import cosine
 from scipy.spatial.distance import euclidean
-from numpy.correlate import correlate
+from numpy import correlate
 from scipy.spatial.distance import jensenshannon
-from dtw import accelerated_dtw
+from fastdtw import fastdtw
 from scipy.stats import pearsonr
 
 os.chdir("/home/vaclav/github_projekty/ISS-projekt1/")
@@ -24,44 +24,56 @@ def normal_fft(file_path):
     return fft_values
 
 
-
-first_file = normal_fft(reference_file)
-
-for file in files:
-    test_fft = normal_fft(file)
-    
-    distance, _, _, _ = accelerated_dtw(first_file, test_fft, dist='euclidean')
-
-    similarity = 1 / (1 + distance)
-    print(f"Similarity of {reference_file} with {file} is: {similarity}")
-
-
 def euclidean_distance(first_file, test_fft):
     distance = euclidean(first_file, test_fft)
     similarity = 1 / (1 + distance)
-    print(f"Similarity between {reference_file} and {file}: {similarity:.2f}")
+    print(f"Euclidean similarity between {reference_file} and {file}: {similarity}")
+    return
 
 def Pearson_correlation(first_file, test_fft):
     correlation, _ = pearsonr(first_file, test_fft)
-    print(f"Similarity between {reference_file} and {file}: {correlation:.2f}")
-
-def Time_Wrapping(first_file, test_fft):
-    distance, _, _, _ = accelerated_dtw(first_file, test_fft, dist='euclidean')
-    similarity = 1 / (1 + distance)
-    print(f"Similarity between {reference_file} and {file}: {similarity:.2f}")
+    print(f"Pearson similarity between {reference_file} and {file}: {correlation}")
 
 def Divergence(first_file, test_fft):
     reference_fft_normalized = first_file / np.sum(first_file)
     test_fft_normalized = test_fft / np.sum(test_fft)
     distance = jensenshannon(reference_fft_normalized, test_fft_normalized)
     similarity = 1 - distance  # Convert to similarity
-    print(f"Similarity between {reference_file} and {file}: {similarity:.2f}")
+    print(f"Divergence similarity between {reference_file} and {file}: {similarity}")
 
 
 def Cross_correlation(first_file, test_fft):
     correlation = np.max(np.correlate(first_file, test_fft, mode='full'))
     normalized_correlation = correlation / (np.linalg.norm(first_file) * np.linalg.norm(test_fft))
-    print(f"Similarity between {reference_file} and {file}: {normalized_correlation:.2f}")
+    print(f"Cross correlation similarity between {reference_file} and {file}: {normalized_correlation}")
+
+first_file = normal_fft(reference_file)
+
+print("\n")
+for file in files:
+    test_fft = normal_fft(file)
+    euclidean_distance(first_file, test_fft)
+
+print("\n")
+for file in files:
+    test_fft = normal_fft(file)
+    Divergence(first_file, test_fft)
+
+print("\n")
+for file in files:
+    test_fft = normal_fft(file)
+    Pearson_correlation(first_file, test_fft)
+
+print("\n")
+for file in files:
+    test_fft = normal_fft(file)
+    Cross_correlation(first_file, test_fft)
+
+
+
+
+
+
 #for file in files:
 #    sample_rate, data = wavfile.read(file)
 #    audio_data.append(data)
