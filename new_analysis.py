@@ -40,7 +40,7 @@ def Divergence(first_file, test_fft, reference_file):
     reference_fft_normalized = first_file / np.sum(first_file)
     test_fft_normalized = test_fft / np.sum(test_fft)
     distance = jensenshannon(reference_fft_normalized, test_fft_normalized)
-    similarity = 1 - distance  # Convert to similarity
+    similarity = 1 - distance
     print(f"Divergence similarity between {reference_file} and {file}: {similarity}")
 
 def Cross_correlation(first_file, test_fft, reference_file):
