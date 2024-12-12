@@ -17,7 +17,6 @@ files = ["test_m.wav", "test_j.wav", "test_i.wav", "test_g.wav"]
 
 audio_data = []
 
-
 def normal_fft(file_path):
     sample_rate, data = wavfile.read(file_path)
     fft_values = np.abs(np.fft.rfft(data))
