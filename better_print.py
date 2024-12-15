@@ -70,11 +70,24 @@ def sine_similarity(first_file, test_fft):
 def print_similarity(method ,similarity, similar_file):
     print(f"{method} method had highest similarity in {similar_file} of value: {similarity}")
 
+def plot_fft(signal_fft, title, figure_id):
+    plt.figure(figure_id)
+    plt.plot(signal_fft, label="FFT Magnitude")
+    plt.title(title)
+    plt.xlabel("Frequency bin")
+    plt.ylabel("Normalized Amplitude")
+    plt.legend()
+    plt.grid(True)
+
+figure_id = 1
 #cyklus pro porovnani vsech 4 znamych souboru
 for a in reference_files:
     first_file = normal_fft(a)
     print("\n")
     print(f"-------------------------------- {a} --------------------------------")
+
+    plot_fft(first_file, f"FFT of Reference File: {a}", figure_id)
+    figure_id += 1
 
     #prvni cyklus sinove podobnosti na znamem signalu a vsech neznamych
     for file in files:
@@ -161,3 +174,5 @@ for a in reference_files:
 
     print(f"-------------------------------- END OF {a} --------------------------------")
     print("\n")
+
+plt.show()
